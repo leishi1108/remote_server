@@ -119,7 +119,7 @@ def upload_file():
                 'success': True,
                 'message': '文件上传成功',
                 'data': {
-                    'original_filename': original_filename,
+                    'original_filename': file.filename,
                     'saved_filename': save_filename,
                     'file_size': file_info['size'] if file_info else 0,
                     'upload_time': file_info['upload_time'] if file_info else datetime.now().isoformat(),
