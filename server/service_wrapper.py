@@ -30,16 +30,18 @@ latency = 1 / qps
 
 server = Flask(__name__)
 
-BASE_DIR = "E:\dwgData"
+UPLOAD_DIR = "E:\dwgData"
 ALLOWED_EXTENSIONS = {
     'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'doc', 'docx', 'zip', 'rar', 'mp4', 'mp3', 'xls', 'xlsx', 'ppt', 'pptx', 'dwg',
 }
 
+DOWNLOAD_DIR = "E:\svgData"
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB
 
-os.makedirs(BASE_DIR, exist_ok=True)
+os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-server.config['UPLOAD_FOLDER'] = BASE_DIR
+server.config['UPLOAD_FOLDER'] = UPLOAD_DIR
+server.config['DOWNLOAD_FOLDER'] = DOWNLOAD_DIR
 server.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH
 
 @server.route("/")
@@ -118,7 +120,7 @@ def upload_file():
                     'saved_filename': save_filename,
                     'file_size': file_info['size'] if file_info else 0,
                     'upload_time': file_info['upload_time'] if file_info else datetime.now().isoformat(),
-                    'download_url': f"/download/{save_filename}",
+                    'download_url': f"{server.config['UPLOAD_FOLDER']}/{save_filename}",
                     'file_id': save_filename.rsplit('.', 1)[0]  # 返回文件ID（不含扩展名）
                 }
             }), 200
@@ -177,7 +179,7 @@ def upload_from_stream(request):
                 'saved_filename': unique_filename,
                 'file_size': file_info['size'] if file_info else len(request.data),
                 'upload_time': file_info['upload_time'] if file_info else datetime.now().isoformat(),
-                'download_url': f"/download/{unique_filename}",
+                'download_url': f"{server.config['UPLOAD_FOLDER']}/{unique_filename}",
                 'file_id': unique_filename.rsplit('.', 1)[0]
             }
         }), 200
@@ -194,10 +196,8 @@ def upload_from_stream(request):
 def download_file(filename):
     """文件下载接口"""
     try:
-
-
         filename = secure_filename(filename)
-        file_path = os.path.join(server.config['UPLOAD_FOLDER'], filename)
+        file_path = os.path.join(server.config['DOWNLOAD_FOLDER'], filename)
 
         if not os.path.exists(file_path):
             return jsonify({
@@ -229,7 +229,7 @@ def list_files():
                     'filename': filename,
                     'size': file_info['size'] if file_info else 0,
                     'upload_time': file_info['upload_time'] if file_info else '',
-                    'download_url': f"/download/{filename}"
+                    'download_url': f"{server.config['UPLOAD_FOLDER']}/{filename}"
                 })
 
         return jsonify({
