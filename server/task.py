@@ -30,6 +30,7 @@ class Task(object):
         self.context = self.request_data.get("context", "")
         self.keyword = self.request_data.get("keyword", "")
         self.cde_params = self.request_data.get("cde_params", {})
+        self.dwg_params = self.request_data.get("dwg_params", {})
         self.task_status = "waiting"
         self.task_results = None
 

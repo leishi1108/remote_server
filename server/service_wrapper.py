@@ -299,10 +299,10 @@ def health_check():
 
 
 
-dsg_client = SimpleDwgClient()
+dwg_client = SimpleDwgClient(dwg_params_key="dwg_params")
 
 service_list = [
-    {"name": "DWG解码", "interface": "/dwg_decode", "handler": dsg_client.run},
+    {"name": "DWG解码", "interface": "/dwg_decode", "handler": dwg_client.run},
 ]
 
 SERVICE_REGISTER = {s["name"]: Service(server=server, **s) for s in service_list}

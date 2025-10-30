@@ -24,20 +24,20 @@ UTC_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
 
 class SimpleDwgClient(object):
 
-    def __init__(self):
+    def __init__(self, dwg_params_key="dwg_params"):
         self.cmd = "E:\dwg\ReleaseDebug\CheckCADTool.exe"
+        self.dwg_params_key = dwg_params_key
 
     def _prepare_data(self, instance):
 
-        assert "dwg_file_path" in instance, f"dwg_file_path not in  request {instance}"
-        assert "svd_file_folder" in instance, f"svd_file_folder not in  request {instance}"
+        assert self.dwg_params_key in instance, f"dwg params key {self.dwg_params_key} not in instance {instance}"
+        dwg_request = instance[self.dwg_params_key]
 
-        dwg_request = {
-            "dwg_file_path": instance["dwg_file_path"],
-            "svd_file_folder": instance["svd_file_folder"],
-            "is_colorful": 1,
-            "is_svd": 1,
-        }
+        assert "dwg_file_path" in dwg_request, f"dwg_file_path not in  dwg_request {dwg_request}"
+        assert "svd_file_folder" in dwg_request, f"svd_file_folder not in  dwg_request {dwg_request}"
+
+        dwg_request["is_colorful"] = "1"
+        dwg_request["is_svd"] = "1"
 
         return dwg_request
 
@@ -59,13 +59,15 @@ class SimpleDwgClient(object):
 
 if __name__ == '__main__':
     test_instance = {
-        "dwg_file_path": "E:\\dwgData\\42a4159835344d4c8d8f7c7cd640b8d3.dwg",
-        "svd_file_folder": "E:\\svgData\\42a4159835344d4c8d8f7c7cd640b8d3",
-        "is_colorful": 1,
-        "is_svd": 1,
+        "dwg_params": {
+            "dwg_file_path": "E:\\dwgData\\42a4159835344d4c8d8f7c7cd640b8d3.dwg",
+            "svd_file_folder": "E:\\svgData\\42a4159835344d4c8d8f7c7cd640b8d3",
+            "is_colorful": 1,
+            "is_svd": 1,
+        }
     }
 
-    simple_dwg_client = SimpleDwgClient()
+    simple_dwg_client = SimpleDwgClient(dwg_params_key="dwg_params")
     output = simple_dwg_client.run(test_instance)
     print(f"simple_dwg_client output {output}")
 
