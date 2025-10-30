@@ -14,6 +14,7 @@ from pathlib import Path
 import zipfile
 import uuid
 from file_handler.dwg_file_handler import SimpleDwgClient
+import shutil
 
 logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger()
@@ -303,7 +304,7 @@ def delete_file(filename):
             }), 404
 
         if os.path.isdir(file_path):
-            os.rmdir(file_path)
+            shutil.rmtree(file_path)
         else:
             os.remove(file_path)
 
