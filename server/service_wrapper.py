@@ -56,9 +56,9 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def get_file_info(filename):
+def get_file_info(folder, filename):
     """获取文件信息"""
-    file_path = os.path.join(server.config['UPLOAD_FOLDER'], filename)
+    file_path = os.path.join(folder, filename)
     if os.path.exists(file_path):
         stat = os.stat(file_path)
         return {
@@ -116,7 +116,7 @@ def upload_file():
             file.save(file_path)
 
             # 获取文件信息
-            file_info = get_file_info(save_filename)
+            file_info = get_file_info(server.config['UPLOAD_FOLDER'], save_filename)
 
             return jsonify({
                 'success': True,
@@ -175,7 +175,7 @@ def upload_from_stream(request):
         with open(file_path, 'wb') as f:
             f.write(request.data)
 
-        file_info = get_file_info(unique_filename)
+        file_info = get_file_info(server.config['UPLOAD_FOLDER'], unique_filename)
 
         return jsonify({
             'success': True,
@@ -250,11 +250,15 @@ def download_file(filename):
 def list_files():
     """获取文件列表"""
     try:
+        req_data = json.loads(request.data.decode("utf-8"))
+        folder = req_data["folder"] if "folder" in req_data and req_data["folder"] is not None else server.config['UPLOAD_FOLDER']
+        print(f"folder {folder}\n")
+
         files = []
-        for filename in os.listdir(server.config['UPLOAD_FOLDER']):
-            file_path = os.path.join(server.config['UPLOAD_FOLDER'], filename)
+        for filename in os.listdir(folder):
+            file_path = os.path.join(folder, filename)
             if os.path.isfile(file_path):
-                file_info = get_file_info(filename)
+                file_info = get_file_info(folder, filename)
                 files.append({
                     'filename': filename,
                     'size': file_info['size'] if file_info else 0,
@@ -298,7 +302,10 @@ def delete_file(filename):
                 'error_code': 'FILE_NOT_FOUND'
             }), 404
 
-        os.remove(file_path)
+        if os.path.isdir(file_path):
+            os.rmdir(file_path)
+        else:
+            os.remove(file_path)
 
         return jsonify({
             'success': True,
