@@ -200,7 +200,9 @@ def upload_from_stream(request):
 def download_file(filename):
     """文件下载接口"""
     try:
-        folder = request.folder if request.folder > 0 else server.config['DOWNLOAD_FOLDER']
+        req_data = json.loads(request.data.decode("utf-8"))
+
+        folder = req_data["folder"] if "folder" in req_data and req_data["folder"] is not None else server.config['DOWNLOAD_FOLDER']
         print(f"folder {folder}\n")
         filename = secure_filename(filename)
         print(f"filename {filename}\n")
