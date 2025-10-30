@@ -39,6 +39,7 @@ DOWNLOAD_DIR = "E:\svgData"
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB
 
 os.makedirs(UPLOAD_DIR, exist_ok=True)
+os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
 server.config['UPLOAD_FOLDER'] = UPLOAD_DIR
 server.config['DOWNLOAD_FOLDER'] = DOWNLOAD_DIR
@@ -199,8 +200,12 @@ def upload_from_stream(request):
 def download_file(filename):
     """文件下载接口"""
     try:
+        folder = request.folder if request.folder > 0 else server.config['DOWNLOAD_FOLDER']
+        print(f"folder {folder}\n")
         filename = secure_filename(filename)
-        file_path = os.path.join(server.config['DOWNLOAD_FOLDER'], filename)
+        print(f"filename {filename}\n")
+        file_path = os.path.join(folder, filename)
+        print(f"file_path {file_path}\n")
 
         if not os.path.exists(file_path):
             return jsonify({
