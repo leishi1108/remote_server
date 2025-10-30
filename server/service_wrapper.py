@@ -93,6 +93,8 @@ def upload_file():
             }), 400
 
         if file and allowed_file(file.filename):
+            print(f"file {file}")
+
             # 生成安全的文件名
             original_filename = secure_filename(file.filename)
             file_extension = original_filename.rsplit('.', 1)[1].lower() if '.' in original_filename else ''
