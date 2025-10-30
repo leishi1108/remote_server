@@ -34,10 +34,10 @@ class SimpleDwgClient(object):
         dwg_request = instance[self.dwg_params_key]
 
         assert "dwg_file_path" in dwg_request, f"dwg_file_path not in  dwg_request {dwg_request}"
-        assert "svd_file_folder" in dwg_request, f"svd_file_folder not in  dwg_request {dwg_request}"
+        assert "svg_file_folder" in dwg_request, f"svg_file_folder not in  dwg_request {dwg_request}"
 
         dwg_request["is_colorful"] = "1"
-        dwg_request["is_svd"] = "1"
+        dwg_request["is_svg"] = "1"
 
         return dwg_request
 
@@ -46,9 +46,9 @@ class SimpleDwgClient(object):
 
         dwg_request = self._prepare_data(instance)
         try:
-            os.makedirs(dwg_request["svd_file_folder"], exist_ok=True)
+            os.makedirs(dwg_request["svg_file_folder"], exist_ok=True)
 
-            result = subprocess.run([self.cmd, "-p", f"{dwg_request['dwg_file_path']}", "-o", f"{dwg_request['svd_file_folder']}", "-t", f"{dwg_request['is_svd']}", "-c", f"{dwg_request['is_colorful']}"])
+            result = subprocess.run([self.cmd, "-p", f"{dwg_request['dwg_file_path']}", "-o", f"{dwg_request['svg_file_folder']}", "-t", f"{dwg_request['is_svg']}", "-c", f"{dwg_request['is_colorful']}"])
                                     # timeout=10, capture_output=True, text=True)
         except subprocess.TimeoutExpired:
             result = None
@@ -61,9 +61,9 @@ if __name__ == '__main__':
     test_instance = {
         "dwg_params": {
             "dwg_file_path": "E:\\dwgData\\42a4159835344d4c8d8f7c7cd640b8d3.dwg",
-            "svd_file_folder": "E:\\svgData\\42a4159835344d4c8d8f7c7cd640b8d3",
+            "svg_file_folder": "E:\\svgData\\42a4159835344d4c8d8f7c7cd640b8d3",
             "is_colorful": 1,
-            "is_svd": 1,
+            "is_svg": 1,
         }
     }
 

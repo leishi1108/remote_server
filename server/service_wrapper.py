@@ -282,8 +282,14 @@ def list_files():
 def delete_file(filename):
     """删除文件"""
     try:
+        req_data = json.loads(request.data.decode("utf-8"))
+
+        folder = req_data["folder"] if "folder" in req_data and req_data["folder"] is not None else server.config['UPLOAD_FOLDER']
+        print(f"folder {folder}\n")
         filename = secure_filename(filename)
-        file_path = os.path.join(server.config['UPLOAD_FOLDER'], filename)
+        print(f"filename {filename}\n")
+        file_path = os.path.join(folder, filename)
+        print(f"file_path {file_path}\n")
 
         if not os.path.exists(file_path):
             return jsonify({
