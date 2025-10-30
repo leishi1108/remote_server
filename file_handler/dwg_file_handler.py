@@ -59,7 +59,7 @@ class SimpleDwgClient(object):
 if __name__ == '__main__':
     test_instance = {
         "dwg_file_path": "E:\\dwgData\\42a4159835344d4c8d8f7c7cd640b8d3.dwg",
-        "svd_file_path": "E:\\svgData\\42a4159835344d4c8d8f7c7cd640b8d3",
+        "svd_file_folder": "E:\\svgData\\42a4159835344d4c8d8f7c7cd640b8d3",
         "is_colorful": 1,
         "is_svd": 1,
     }
