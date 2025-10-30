@@ -48,12 +48,13 @@ class SimpleDwgClient(object):
         try:
             os.makedirs(dwg_request["svd_file_folder"], exist_ok=True)
 
-            result = subprocess.run([self.cmd, "-p", f"{dwg_request['dwg_file_path']}", "-o", f"{dwg_request['svd_file_folder']}", "-t", dwg_request['is_svd'], "-c", dwg_request['is_colorful']],
-                                    timeout=10, capture_output=True, text=True)
+            result = subprocess.run([self.cmd, "-p", f"{dwg_request['dwg_file_path']}", "-o", f"{dwg_request['svd_file_folder']}", "-t", f"{dwg_request['is_svd']}", "-c", f"{dwg_request['is_colorful']}"])
+                                    # timeout=10, capture_output=True, text=True)
         except subprocess.TimeoutExpired:
+            result = None
             print("命令执行超时")
 
-        return os.listdir(dwg_request['svd_file_folder'])
+        return result
 
 
 if __name__ == '__main__':
