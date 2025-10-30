@@ -65,6 +65,7 @@ class Task(object):
             "task_status": self.task_status,
             "task_results": self.task_results,
             "cde_params": self.cde_params,
+            "dwg_params": self.dwg_params,
         }
 
     def run(self):
