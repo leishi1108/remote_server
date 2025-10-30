@@ -95,15 +95,18 @@ def upload_file():
             }), 400
 
         if file and allowed_file(file.filename):
-            print(f"file {file}")
+            print(f"file: {file}\n")
 
             # 生成安全的文件名
             original_filename = secure_filename(file.filename)
+            print(f"original_filename: {original_filename}\n")
+
             file_extension = original_filename.rsplit('.', 1)[1].lower() if '.' in original_filename else ''
 
             # 生成唯一文件名避免冲突
             unique_filename = f"{uuid.uuid4().hex}.{file_extension}" if file_extension else uuid.uuid4().hex
             save_filename = unique_filename
+            print(f"save_filename: {save_filename}\n")
 
             # 保存文件
             file_path = os.path.join(server.config['UPLOAD_FOLDER'], save_filename)
@@ -120,7 +123,7 @@ def upload_file():
                     'saved_filename': save_filename,
                     'file_size': file_info['size'] if file_info else 0,
                     'upload_time': file_info['upload_time'] if file_info else datetime.now().isoformat(),
-                    'download_url': f"{server.config['UPLOAD_FOLDER']}/{save_filename}",
+                    'download_url': file_path,
                     'file_id': save_filename.rsplit('.', 1)[0]  # 返回文件ID（不含扩展名）
                 }
             }), 200
