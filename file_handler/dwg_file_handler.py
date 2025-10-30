@@ -54,7 +54,7 @@ class SimpleDwgClient(object):
             result = None
             print("命令执行超时")
 
-        return result
+        return {"returncode": result.returncode}
 
 
 if __name__ == '__main__':

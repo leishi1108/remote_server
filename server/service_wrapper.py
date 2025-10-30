@@ -12,6 +12,7 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 from pathlib import Path
 import uuid
+from file_handler.dwg_file_handler import SimpleDwgClient
 
 logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger()
@@ -296,6 +297,15 @@ def health_check():
         'service': 'File Upload Service'
     }), 200
 
+
+
+dsg_client = SimpleDwgClient()
+
+service_list = [
+    {"name": "DWG解码", "interface": "/dwg_decode", "handler": dsg_client.run},
+]
+
+SERVICE_REGISTER = {s["name"]: Service(server=server, **s) for s in service_list}
 
 def main():
     parser = argparse.ArgumentParser()
