@@ -183,7 +183,7 @@ def upload_from_stream(request):
                 'saved_filename': unique_filename,
                 'file_size': file_info['size'] if file_info else len(request.data),
                 'upload_time': file_info['upload_time'] if file_info else datetime.now().isoformat(),
-                'download_url': f"{server.config['UPLOAD_FOLDER']}/{unique_filename}",
+                'download_url': file_path,
                 'file_id': unique_filename.rsplit('.', 1)[0]
             }
         }), 200
@@ -239,7 +239,7 @@ def list_files():
                     'filename': filename,
                     'size': file_info['size'] if file_info else 0,
                     'upload_time': file_info['upload_time'] if file_info else '',
-                    'download_url': f"{server.config['UPLOAD_FOLDER']}/{filename}"
+                    'download_url': file_path,
                 })
 
         return jsonify({
