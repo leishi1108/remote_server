@@ -11,6 +11,7 @@ from flask import Flask, request, jsonify, send_file
 from werkzeug.utils import secure_filename
 from datetime import datetime
 from pathlib import Path
+import zipfile
 import uuid
 from file_handler.dwg_file_handler import SimpleDwgClient
 
@@ -216,6 +217,24 @@ def download_file(filename):
                 'message': '文件不存在',
                 'error_code': 'FILE_NOT_FOUND'
             }), 404
+
+        if os.path.isdir(file_path):
+            output_zip_path = os.path.join(folder, f"{filename}.zip")
+            with zipfile.ZipFile(output_zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+
+                # 遍历文件夹中的所有文件和子文件夹
+                for root, dirs, files in os.walk(file_path):
+                    for sub_file in files:
+                        sub_file_path = os.path.join(root, sub_file)
+                        # 计算在 ZIP 文件中的相对路径
+                        arcname = os.path.relpath(sub_file_path, file_path)
+
+                        # 添加到 ZIP 文件
+                        zipf.write(sub_file_path, arcname)
+                        print(f"添加文件: {arcname}")
+
+            print(f"压缩完成! 文件大小: {os.path.getsize(output_zip_path)} 字节")
+            file_path = output_zip_path
 
         return send_file(file_path, as_attachment=True)
 
