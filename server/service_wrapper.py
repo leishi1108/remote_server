@@ -290,6 +290,8 @@ def delete_file(filename):
         req_data = json.loads(request.data.decode("utf-8"))
 
         folder = req_data["folder"] if "folder" in req_data and req_data["folder"] is not None else server.config['UPLOAD_FOLDER']
+
+        assert folder in [UPLOAD_DIR, DOWNLOAD_DIR], f"delete folder must in [{UPLOAD_DIR}, {DOWNLOAD_DIR}], but {folder} now"
         print(f"folder {folder}\n")
         filename = secure_filename(filename)
         print(f"filename {filename}\n")
