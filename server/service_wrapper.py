@@ -39,7 +39,7 @@ ALLOWED_EXTENSIONS = {
 }
 
 DOWNLOAD_DIR = "E:\svgData"
-MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB
+MAX_CONTENT_LENGTH = 100 * 1024 * 1024  # 16MB
 
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
