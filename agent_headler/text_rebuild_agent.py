@@ -20,11 +20,11 @@ class TextRebuildAgent(SimpleGraphBuilder):
         super().__init__()
 
     def _setup_nodes(self):
-        self.builder.add_node("react_agent", self.agent_runner)
+        self.builder.add_node("react_agent", self.agent_runner.__run__)
 
     def _setup_edges(self):
         self.builder.add_edge("react_agent", END)
-        
+
         self.builder.set_entry_point("react_agent")
 
 
