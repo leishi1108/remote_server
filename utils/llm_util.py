@@ -184,4 +184,4 @@ if __name__ == '__main__':
         temperature=0.3,  # 确定性输出
         max_tokens=2000  # 减少token消耗
     )
-    llm.invoke("你是谁")
+    print(llm.invoke("你是谁"))
