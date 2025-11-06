@@ -39,4 +39,5 @@ if __name__ == '__main__':
     )
 
     agent_client = TextRebuildAgent(llm=llm, tools=[], prompt="")
-    print(agent_client.invoke({"你是谁"}))
+    print(f"graph: {agent_client.graph}")
+    agent_client.graph.invoke({"messages": "你是谁？"})
