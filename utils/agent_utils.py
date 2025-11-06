@@ -6,6 +6,7 @@ from langgraph.graph import MessagesState
 from langgraph.graph import StateGraph
 from langchain_core.messages import HumanMessage, BaseMessage, SystemMessage, AIMessage, ToolMessage, FunctionMessage
 
+
 class AgentState(MessagesState):
     """代理状态类，继承自MessagesState以支持消息的追加合并"""
     current_agent: str = "fallback"
@@ -22,6 +23,7 @@ class SimpleGraphBuilder:
         self.builder = StateGraph(AgentState)
         self._setup_nodes()
         self._setup_edges()
+        self.compile()
 
     def _setup_nodes(self):
         """设置图节点"""
