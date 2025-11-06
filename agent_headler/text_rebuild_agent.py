@@ -40,4 +40,4 @@ if __name__ == '__main__':
 
     agent_client = TextRebuildAgent(llm=llm, tools=[], prompt="")
     print(f"graph: {agent_client.graph.get_graph()}")
-    agent_client.graph.invoke({"messages": "你是谁？"})
+    agent_client.invoke({"messages": "你是谁？"})
