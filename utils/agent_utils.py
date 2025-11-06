@@ -19,11 +19,12 @@ class SimpleGraphBuilder:
     """LangGraph状态图构建器"""
 
     def __init__(self):
+
         self.messages = []
         self.builder = StateGraph(AgentState)
         self._setup_nodes()
         self._setup_edges()
-        self.compile()
+        self.graph = self.compile()
 
     def _setup_nodes(self):
         """设置图节点"""
@@ -36,6 +37,9 @@ class SimpleGraphBuilder:
     def compile(self):
         """编译图"""
         return self.builder.compile()
+
+    def invoke(self, request):
+        self.graph.invoke(request)
 
 class SimpleAgentRunner:
     def __init__(self, agent):
