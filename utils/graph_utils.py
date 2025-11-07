@@ -27,8 +27,6 @@ class SimpleGraphBuilder:
         """编译图"""
         return self.builder.compile()
 
-    def invoke(self, request):
-        self.graph.invoke(request)
 
 
 def fallback_node(state: MessagesState):
