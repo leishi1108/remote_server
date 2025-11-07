@@ -32,9 +32,9 @@ class TextRebuildAgent:
         """调用大模型并获取原始输出"""
         try:
             prompt = f"{self.prompt}{state['input_text']}\n输出: "
-            print(f"prompt: {prompt}")
+            print(f"prompt: {prompt}\n")
             raw_response = self.model.invoke(f"{prompt}")
-            print(f"raw_response {raw_response}")
+            print(f"raw_response {raw_response}\n")
 
             content = None
             content_key = "content"
@@ -52,6 +52,7 @@ class TextRebuildAgent:
 
     def run(self, request):
         llm_res = self.call_llm_node(request)
+        print(f"llm_res {llm_res}\n")
         return llm_res
 
 
