@@ -15,7 +15,7 @@ class TextRebuildState(TypedDict):
     error: str
 
 
-class TextRebuildAgent():
+class TextRebuildAgent:
     def __init__(self, llm, tools, prompt=None):
         self.llm = llm
         self.parser = AIMessageParser()
@@ -27,8 +27,9 @@ class TextRebuildAgent():
     def call_llm_node(self, state: TextRebuildState):
         """调用大模型并获取原始输出"""
         try:
-            print(f"input_text {state['input_text']}")
-            raw_response = self.llm.invoke(f"{self.prompt}{state['input_text']}\n输出: ")
+            prompt = f"{self.prompt}{state['input_text']}\n输出: "
+            print(f"prompt: {prompt}")
+            raw_response = self.llm.invoke(f"{prompt}")
             # print(f"raw_response {raw_response}")
             # state["raw_output"] = raw_response
             # state["json_output"] = {"ai_message": self.parser.parse_ai_message(raw_response)}
@@ -49,10 +50,10 @@ if __name__ == '__main__':
     llm = CustomLLM(
         api_url="https://copilot.glodon.com/api/cvforce/aishop/v1/chat/completions",
         access_token=generate_token(api_key="TBDDAGJzAXaX5Zzl", api_secret="LEucuSDPRYCUaLj0UX1vvhoA"),
-        model_name="Aejvnm7q3qmko",  # r1
-        # model_name = "Awd7m0gtxfphu", # v3
+        # model_name="Aejvnm7q3qmko",  # r1
+        model_name = "Awd7m0gtxfphu", # v3
         temperature=0.3,  # 确定性输出
-        max_tokens=2000  # 减少token消耗
+        max_tokens=8000  # 减少token消耗
     )
     # print(llm.invoke("你是谁？"))
     agent_client = TextRebuildAgent(llm=llm, tools=[])
