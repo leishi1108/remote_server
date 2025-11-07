@@ -15,7 +15,7 @@ class TextRebuildState(TypedDict):
     error: str
 
 
-class TextRebuildAgent(SimpleGraphBuilder):
+class TextRebuildAgent():
     def __init__(self, llm, tools, prompt=None):
         self.llm = llm
         self.parser = AIMessageParser()
@@ -36,12 +36,11 @@ class TextRebuildAgent(SimpleGraphBuilder):
             state["error"] = f"模型调用失败: {str(e)}"
         return state
 
-    def _setup_nodes(self):
-        self.builder.add_node("call_llm", self.call_llm_node)
+    def run(self, request):
+        llm_res = self.call_llm_node(request)
+        return llm_res
 
-    def _setup_edges(self):
-        self.builder.add_edge("call_llm", END)
-        self.builder.set_entry_point("call_llm")
+
 
 
 
@@ -55,7 +54,6 @@ if __name__ == '__main__':
     )
     print(llm.invoke("你是谁？"))
     agent_client = TextRebuildAgent(llm=llm, tools=[])
-    print(f"agent_client {agent_client.graph}")
 
-    res = agent_client.graph.invoke({"input_text": "[{\"id\": \"15625\", \"x\": \"335.315\", \"y\": \"3002.99\", \"text\": \"11.6  填充墙维护墙防开裂措施;\"}]"})
+    res = agent_client.run({"input_text": "[{\"id\": \"15625\", \"x\": \"335.315\", \"y\": \"3002.99\", \"text\": \"11.6  填充墙维护墙防开裂措施;\"}]"})
     print(f"res {res}")
