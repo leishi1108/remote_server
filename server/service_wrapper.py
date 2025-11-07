@@ -14,6 +14,8 @@ from pathlib import Path
 import zipfile
 import uuid
 from file_handler.dwg_file_handler import SimpleDwgClient
+from agent_headler.text_rebuild_agent import TextRebuildAgent
+from utils.llm_util import CustomLLM, generate_token, AIMessageParser
 import shutil
 
 logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -334,10 +336,14 @@ def health_check():
 
 
 
+dsv3 = CustomLLM(api_url="https://copilot.glodon.com/api/cvforce/aishop/v1/chat/completions", access_token=generate_token(api_key="TBDDAGJzAXaX5Zzl", api_secret="LEucuSDPRYCUaLj0UX1vvhoA"), model_name = "Awd7m0gtxfphu", temperature=0.3, max_tokens=8000)
+
 dwg_client = SimpleDwgClient(dwg_params_key="dwg_params")
+text_rebuild_client = TextRebuildAgent(text_key="input_text", model=dsv3)
 
 service_list = [
     {"name": "DWG解码", "interface": "/dwg_decode", "handler": dwg_client.run},
+    {"name": "文本顺序重构", "interface": "/text_rebuild", "handler": text_rebuild_client.run},
 ]
 
 SERVICE_REGISTER = {s["name"]: Service(server=server, **s) for s in service_list}
