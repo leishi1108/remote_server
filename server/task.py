@@ -29,6 +29,7 @@ class Task(object):
         self.text = self.request_data.get("text", "")
         self.context = self.request_data.get("context", "")
         self.keyword = self.request_data.get("keyword", "")
+        self.input_text = self.request_data.get("input_text", "")
         self.cde_params = self.request_data.get("cde_params", {})
         self.dwg_params = self.request_data.get("dwg_params", {})
         self.task_status = "waiting"
@@ -62,6 +63,7 @@ class Task(object):
             "text": self.text,
             "context": self.context,
             "keyword": self.keyword,
+            "input_text": self.input_text,
             "task_status": self.task_status,
             "task_results": self.task_results,
             "cde_params": self.cde_params,
