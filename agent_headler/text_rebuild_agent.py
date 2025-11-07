@@ -20,7 +20,7 @@ class TextRebuildAgent:
         self.llm = llm
         self.parser = AIMessageParser()
         self.tools = tools
-        self.prompt = prompt if prompt is not None else """根据文本以及坐标，把文本整理成正确的语序，使得语句通顺，结果按json列表输出。输出示例：[{"text": "", "source_id": ["", ""]}, ]。\n输入：\n"""
+        self.prompt = prompt if prompt is not None else """根据文本以及坐标，把文本列表整理成正确的语序，使得语句通顺，结果按json列表输出。输出示例：[{"text": "", "source_id": ["", ""]}, ]。\n输入：\n"""
 
         super().__init__()
 
@@ -30,9 +30,9 @@ class TextRebuildAgent:
             prompt = f"{self.prompt}{state['input_text']}\n输出: "
             print(f"prompt: {prompt}")
             raw_response = self.llm.invoke(f"{prompt}")
-            # print(f"raw_response {raw_response}")
-            # state["raw_output"] = raw_response
-            # state["json_output"] = {"ai_message": self.parser.parse_ai_message(raw_response)}
+            print(f"raw_response {raw_response}")
+            state["raw_output"] = raw_response
+            state["json_output"] = {"ai_message": self.parser.parse_ai_message(raw_response)}
         except Exception as e:
             raw_response = None
             # state["error"] = f"模型调用失败: {str(e)}"
