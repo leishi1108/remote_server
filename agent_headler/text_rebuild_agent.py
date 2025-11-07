@@ -35,7 +35,15 @@ class TextRebuildAgent:
             print(f"prompt: {prompt}")
             raw_response = self.model.invoke(f"{prompt}")
             print(f"raw_response {raw_response}")
-            state["raw_output"] = raw_response
+
+            content = None
+            content_key = "content"
+            if hasattr(raw_response, content_key):
+                content = getattr(raw_response, content_key)
+            elif isinstance(raw_response, dict) and content_key in raw_response:
+                content = raw_response[content_key]
+
+            state["raw_output"] = content
             state["json_output"] = {"ai_message": self.parser.parse_ai_message(raw_response)}
         except Exception as e:
             state["json_output"] = {}
