@@ -34,9 +34,9 @@ class TextRebuildAgent:
             state["raw_output"] = raw_response
             state["json_output"] = {"ai_message": self.parser.parse_ai_message(raw_response)}
         except Exception as e:
-            raw_response = None
+            state["json_output"] = {}
             # state["error"] = f"模型调用失败: {str(e)}"
-        return raw_response
+        return state
 
     def run(self, request):
         llm_res = self.call_llm_node(request)
