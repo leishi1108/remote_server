@@ -16,6 +16,108 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
+import json
+import re
+from typing import Dict, List, Any, Optional
+
+
+class AIMessageParser:
+    """AIMessage内容解析器"""
+
+    @staticmethod
+    def parse_ai_message(ai_message,
+                         content_key: str = 'content',
+                         validate: bool = True) -> List[Dict[str, Any]]:
+        """
+        解析AIMessage对象中的JSON内容
+
+        Args:
+            ai_message: AIMessage对象或类似结构
+            content_key: 内容字段的键名
+            validate: 是否验证解析结果
+
+        Returns:
+            List[Dict[str, Any]]: 解析后的数据列表
+        """
+        try:
+            # 获取内容
+            if hasattr(ai_message, content_key):
+                content = getattr(ai_message, content_key)
+            elif isinstance(ai_message, dict) and content_key in ai_message:
+                content = ai_message[content_key]
+            else:
+                raise ValueError(f"无法找到内容字段: {content_key}")
+
+            # 提取JSON字符串
+            json_str = AIMessageParser._extract_json_string(content)
+
+            # 解析JSON
+            parsed_data = json.loads(json_str)
+
+            # 验证数据格式
+            if validate:
+                AIMessageParser._validate_parsed_data(parsed_data)
+
+            return parsed_data
+
+        except Exception as e:
+            print(f"解析失败: {e}")
+            return []
+
+    @staticmethod
+    def _extract_json_string(content: str) -> str:
+        """从内容中提取JSON字符串"""
+        # 方法1: 提取代码块中的JSON
+        json_match = re.search(r'```json\s*(.*?)\s*```', content, re.DOTALL)
+        if json_match:
+            return json_match.group(1).strip()
+
+        # 方法2: 提取方括号内的内容
+        bracket_match = re.search(r'(\[\s*\{.*?\}\s*\])', content, re.DOTALL)
+        if bracket_match:
+            return bracket_match.group(1).strip()
+
+        # 方法3: 尝试直接解析整个内容
+        try:
+            # 检查内容本身是否是有效的JSON
+            json.loads(content.strip())
+            return content.strip()
+        except:
+            pass
+
+        raise ValueError("无法从内容中提取有效的JSON数据")
+
+    @staticmethod
+    def _validate_parsed_data(data: Any) -> None:
+        """验证解析后的数据格式"""
+        if not isinstance(data, list):
+            raise ValueError("解析的数据应该是列表类型")
+
+        required_keys = {'text', 'source_id'}
+        for i, item in enumerate(data):
+            if not isinstance(item, dict):
+                raise ValueError(f"第 {i} 个元素应该是字典类型")
+
+            missing_keys = required_keys - set(item.keys())
+            if missing_keys:
+                raise ValueError(f"第 {i} 个元素缺少必要的键: {missing_keys}")
+
+            if not isinstance(item['source_id'], list):
+                raise ValueError(f"第 {i} 个元素的 source_id 应该是列表类型")
+
+    @staticmethod
+    def get_texts_only(ai_message) -> List[str]:
+        """仅提取文本内容"""
+        data = AIMessageParser.parse_ai_message(ai_message)
+        return [item['text'] for item in data]
+
+    @staticmethod
+    def get_source_mapping(ai_message) -> Dict[str, List[str]]:
+        """获取源ID到文本的映射"""
+        data = AIMessageParser.parse_ai_message(ai_message)
+        return {item['text']: item['source_id'] for item in data}
+
+
 
 def generate_md5(src):
     m = md5(src.encode(encoding='utf-8'))
