@@ -15,7 +15,7 @@ class TextRebuildState(TypedDict):
     error: str
 
 
-class TextRebuildAgent:
+class PartialMatchAgent:
     def __init__(self, text_key, model, tools=None, prompt=None):
         if tools is None:
             tools = []
@@ -54,6 +54,9 @@ class TextRebuildAgent:
         llm_res = self.call_llm_node(request)
         print(f"llm_res {llm_res}\n")
         return llm_res
+
+
+
 
 
 if __name__ == '__main__':
