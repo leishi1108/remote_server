@@ -63,7 +63,7 @@ if __name__ == '__main__':
         # model_name="Aejvnm7q3qmko",  # r1
         model_name = "Awd7m0gtxfphu", # v3
         temperature=0.3,  # 确定性输出
-        max_tokens=8000  # 减少token消耗
+        max_tokens=12000  # 减少token消耗
     )
     # print(llm.invoke("你是谁？"))
     agent_client = TextRebuildAgent(text_key="input_text", model=llm)

@@ -336,7 +336,7 @@ def health_check():
 
 
 
-dsv3 = CustomLLM(api_url="https://copilot.glodon.com/api/cvforce/aishop/v1/chat/completions", access_token=generate_token(api_key="TBDDAGJzAXaX5Zzl", api_secret="LEucuSDPRYCUaLj0UX1vvhoA"), model_name = "Awd7m0gtxfphu", temperature=0.3, max_tokens=8000)
+dsv3 = CustomLLM(api_url="https://copilot.glodon.com/api/cvforce/aishop/v1/chat/completions", access_token=generate_token(api_key="TBDDAGJzAXaX5Zzl", api_secret="LEucuSDPRYCUaLj0UX1vvhoA"), model_name = "Awd7m0gtxfphu", temperature=0.3, max_tokens=12000)
 
 dwg_client = SimpleDwgClient(dwg_params_key="dwg_params")
 text_rebuild_client = TextRebuildAgent(text_key="input_text", model=dsv3)
