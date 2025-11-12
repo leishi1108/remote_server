@@ -16,6 +16,7 @@ import uuid
 from file_handler.dwg_file_handler import SimpleDwgClient
 from agent_headler.text_rebuild_agent import TextRebuildAgent
 from agent_headler.partial_match_agent import PartialMatchAgent
+from agent_headler.list_make_agent import ListMakeAgent
 from utils.llm_util import CustomLLM, generate_token, AIMessageParser
 import shutil
 
@@ -342,11 +343,14 @@ dsv3 = CustomLLM(api_url="https://copilot.glodon.com/api/cvforce/aishop/v1/chat/
 dwg_client = SimpleDwgClient(dwg_params_key="dwg_params")
 text_rebuild_client = TextRebuildAgent(text_key="input_text", model=dsv3)
 partial_match_client = PartialMatchAgent(text_key="input_text", model=dsv3)
+list_make_client = ListMakeAgent(text_key="text", context_key="context")
 
 service_list = [
     {"name": "DWG解码", "interface": "/dwg_decode", "handler": dwg_client.run},
     {"name": "文本顺序重构", "interface": "/text_rebuild", "handler": text_rebuild_client.run},
     {"name": "项目匹配", "interface": "/partial_match", "handler": partial_match_client.run},
+    {"name": "清单编制", "interface": "/list_make", "handler": list_make_client.run},
+
 ]
 
 SERVICE_REGISTER = {s["name"]: Service(server=server, **s) for s in service_list}
