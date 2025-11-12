@@ -343,7 +343,7 @@ dsv3 = CustomLLM(api_url="https://copilot.glodon.com/api/cvforce/aishop/v1/chat/
 dwg_client = SimpleDwgClient(dwg_params_key="dwg_params")
 text_rebuild_client = TextRebuildAgent(text_key="input_text", model=dsv3)
 partial_match_client = PartialMatchAgent(text_key="input_text", model=dsv3)
-list_make_client = ListMakeAgent(text_key="text", context_key="context")
+list_make_client = ListMakeAgent(text_key="text", context_key="context", model=dsv3)
 
 service_list = [
     {"name": "DWG解码", "interface": "/dwg_decode", "handler": dwg_client.run},
