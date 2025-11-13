@@ -22,7 +22,7 @@ class ListMakeAgent:
         self.text_key = text_key
         self.context_key = context_key
         self.model = model
-        self.prompt = prompt if prompt is not None else "根据项目信息要求，尽可能从输入文本中提取匹配的信息，生成建筑行业的项目清单。\n生成要求：\n1、输出结果中只包含清单列表，如果无法生成清单则返回空列表；\n2、如果输入文本中没有匹配内容，则不生成清单；\n3、钢筋混凝土构件的清单按照混凝土强度等级分别生成清单；\n4、尽可能提取合适的部位信息，如空间、楼层；"
+        self.prompt = prompt if prompt is not None else "根据项目信息要求，尽可能从输入文本中提取匹配的信息，生成建筑行业的项目清单。\n生成要求：\n1、输出结果中只包含清单列表，如果无法生成清单则返回空列表，不需要解释原因；\n2、如果输入文本中没有匹配内容，则不生成清单；\n3、钢筋混凝土构件的清单按照混凝土强度等级分别生成清单；\n4、尽可能提取合适的部位信息，如空间、楼层；"
         self.partial_dict = PARTIAL_DICT
 
 
