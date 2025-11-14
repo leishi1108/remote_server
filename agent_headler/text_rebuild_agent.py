@@ -24,7 +24,7 @@ class TextRebuildAgent:
         self.parser = AIMessageParser()
         self.tools = tools
         # self.prompt = prompt if prompt is not None else """根据文本以及坐标，把文本列表整理成正确的语序，使得语句通顺，结果按json列表输出。输出示例：[{"text": "", "source_id": ["", ""]}, ]。\n输入：\n"""
-        self.prompt = prompt if prompt is not None else "根据文本以及坐标，把文本整理成正确的语序，使得语句通顺。输出中只包含正确语序的文本。"
+        self.prompt = prompt if prompt is not None else "根据文本以及坐标，把文本整理成正确的语序，使得语句通顺。\n生成要求：\n1、输出中只包含正确语序的文本，不包含额外的解释；\n2、尽可能输出原始的文本信息，不允许省略。"
 
 
         super().__init__()
