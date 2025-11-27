@@ -376,7 +376,7 @@ service_list = [
     {"name": "文本顺序重构", "interface": "/text_rebuild", "handler": text_rebuild_client.run},
     {"name": "项目匹配", "interface": "/partial_match", "handler": partial_match_client.run},
     {"name": "清单编制", "interface": "/list_make", "handler": list_make_client.run},
-    {"name": "图纸识别", "interface": "/image_table", "handler": image_table_client.run},
+    # {"name": "图纸识别", "interface": "/image_table", "handler": image_table_client.run},
 
 ]
 
