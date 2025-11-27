@@ -393,30 +393,30 @@ def main():
     for name in SERVICE_REGISTER:
         SERVICE_REGISTER[name].listen()
 
-    # message = "\n".join(["service"] + [f"{k}:{v.to_dict()}" for k, v in SERVICE_REGISTER.items()])
-    # logger.info(message)
+    message = "\n".join(["service"] + [f"{k}:{v.to_dict()}" for k, v in SERVICE_REGISTER.items()])
+    logger.info(message)
+
+    server.run(host="0.0.0.0", port=f"{port}", processes=True)
+    logger.info(f"start serving")
+
+    # global should_restart
+    # while True:
+    #     try:
+    #         message = "\n".join(["service"] + [f"{k}:{v.to_dict()}" for k, v in SERVICE_REGISTER.items()])
+    #         logger.info(message)
     #
-    # server.run(host="0.0.0.0", port=f"{port}", processes=True)
-    # logger.info(f"start serving")
-
-    global should_restart
-    while True:
-        try:
-            message = "\n".join(["service"] + [f"{k}:{v.to_dict()}" for k, v in SERVICE_REGISTER.items()])
-            logger.info(message)
-
-            server.run(host="0.0.0.0", port=f"{port}", processes=True)
-            logger.info(f"start serving")
-
-        except Exception as e:
-            print(f"服务异常: {e}")
-            if should_restart:
-                print("执行热重启...")
-                should_restart = False
-                time.sleep(1)  # 等待连接清理
-                continue
-            else:
-                break
+    #         server.run(host="0.0.0.0", port=f"{port}", processes=True)
+    #         logger.info(f"start serving")
+    #
+    #     except Exception as e:
+    #         print(f"服务异常: {e}")
+    #         if should_restart:
+    #             print("执行热重启...")
+    #             should_restart = False
+    #             time.sleep(1)  # 等待连接清理
+    #             continue
+    #         else:
+    #             break
 
     for name in SERVICE_REGISTER:
         SERVICE_REGISTER[name].stop()
