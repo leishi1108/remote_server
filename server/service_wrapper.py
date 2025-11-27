@@ -20,6 +20,7 @@ from agent_headler.list_make_agent import ListMakeAgent
 from agent_headler.image_table_agent import ImageTableAgent
 from utils.llm_util import CustomLLM, generate_token, AIMessageParser
 import shutil
+import signal
 
 logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger()
@@ -38,6 +39,20 @@ latency = 1 / qps
 
 server = Flask(__name__)
 
+
+# 全局变量标记是否需要重启
+should_restart = False
+reload_time = 0
+
+def signal_handler(signum, frame):
+    global should_restart
+    if signum == signal.SIGHUP:
+        print("收到重启信号，准备热重启...")
+        should_restart = True
+
+signal.signal(signal.SIGHUP, signal_handler)
+
+
 UPLOAD_DIR = "E:\dwgData"
 ALLOWED_EXTENSIONS = {
     'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'doc', 'docx', 'zip', 'rar', 'mp4', 'mp3', 'xls', 'xlsx', 'ppt', 'pptx', 'dwg',
@@ -53,9 +68,18 @@ server.config['UPLOAD_FOLDER'] = UPLOAD_DIR
 server.config['DOWNLOAD_FOLDER'] = DOWNLOAD_DIR
 server.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH
 
+@server.route('/reload')
+def reload():
+    global reload_time
+    # 通过API触发重启
+    reload_time += 1
+    os.kill(os.getpid(), signal.SIGHUP)
+    return '重启信号已发送'
+
 @server.route("/")
 def hello_world():
-    return "<p>Hello, Win Server!</p>"
+    global reload_time
+    return f"<p>Hello, Win Server! {reload_time}</p>"
 
 def allowed_file(filename):
     """检查文件扩展名是否允许"""
@@ -359,6 +383,8 @@ service_list = [
 SERVICE_REGISTER = {s["name"]: Service(server=server, **s) for s in service_list}
 
 def main():
+    logger.info(f"服务启动，PID: {os.getpid()}")
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", type=str, required=True, help="端口号, 服务启动的端口号")
     args = parser.parse_args()
@@ -367,14 +393,35 @@ def main():
     for name in SERVICE_REGISTER:
         SERVICE_REGISTER[name].listen()
 
-    message = "\n".join(["service"] + [f"{k}:{v.to_dict()}" for k, v in SERVICE_REGISTER.items()])
-    logger.info(message)
+    # message = "\n".join(["service"] + [f"{k}:{v.to_dict()}" for k, v in SERVICE_REGISTER.items()])
+    # logger.info(message)
+    #
+    # server.run(host="0.0.0.0", port=f"{port}", processes=True)
+    # logger.info(f"start serving")
 
-    server.run(host="0.0.0.0", port=f"{port}", processes=True)
-    logger.info(f"start serving")
+    global should_restart
+    while True:
+        try:
+            message = "\n".join(["service"] + [f"{k}:{v.to_dict()}" for k, v in SERVICE_REGISTER.items()])
+            logger.info(message)
+
+            server.run(host="0.0.0.0", port=f"{port}", processes=True)
+            logger.info(f"start serving")
+
+        except Exception as e:
+            print(f"服务异常: {e}")
+            if should_restart:
+                print("执行热重启...")
+                should_restart = False
+                time.sleep(1)  # 等待连接清理
+                continue
+            else:
+                break
 
     for name in SERVICE_REGISTER:
         SERVICE_REGISTER[name].stop()
+
+
 
 
 if __name__ == '__main__':
