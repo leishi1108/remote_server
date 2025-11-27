@@ -17,7 +17,7 @@ from file_handler.dwg_file_handler import SimpleDwgClient
 from agent_headler.text_rebuild_agent import TextRebuildAgent
 from agent_headler.partial_match_agent import PartialMatchAgent
 from agent_headler.list_make_agent import ListMakeAgent
-from agent_headler.image_table_agent import ImageTableAgent
+# from agent_headler.image_table_agent import ImageTableAgent
 from utils.llm_util import CustomLLM, generate_token, AIMessageParser
 import shutil
 import signal
