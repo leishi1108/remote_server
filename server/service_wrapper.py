@@ -73,6 +73,7 @@ def reload():
     global reload_time
     # 通过API触发重启
     reload_time += 1
+    logger.info(f"will kill pid {os.getpid()}")
     os.kill(os.getpid(), signal.SIGHUP)
     return '重启信号已发送'
 
