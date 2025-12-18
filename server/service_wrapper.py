@@ -16,6 +16,7 @@ import uuid
 from file_handler.dwg_file_handler import SimpleDwgClient
 from agent_headler.text_rebuild_agent import TextRebuildAgent
 from agent_headler.partial_match_agent import PartialMatchAgent
+from agent_headler.sequence_match_agent import SequenceMatchAgent
 from agent_headler.list_make_agent import ListMakeAgent
 # from agent_headler.image_table_agent import ImageTableAgent
 from utils.llm_util import CustomLLM, generate_token, AIMessageParser
@@ -370,6 +371,7 @@ dwg_client = SimpleDwgClient(dwg_params_key="dwg_params")
 text_rebuild_client = TextRebuildAgent(text_key="input_text", model=dsv3)
 partial_match_client = PartialMatchAgent(text_key="input_text", model=dsv3)
 list_make_client = ListMakeAgent(text_key="text", context_key="context", model=dsv3)
+sequence_match_client = SequenceMatchAgent(text_key="input_text", model=dsv3)
 # image_table_client = ImageTableAgent(model=dsv3)
 
 service_list = [
@@ -378,6 +380,7 @@ service_list = [
     {"name": "项目匹配", "interface": "/partial_match", "handler": partial_match_client.run},
     {"name": "清单编制", "interface": "/list_make", "handler": list_make_client.run},
     # {"name": "图纸识别", "interface": "/image_table", "handler": image_table_client.run},
+    {"name": "工序匹配", "interface": "/sequence_match", "handler": sequence_match_client.run},
 
 ]
 

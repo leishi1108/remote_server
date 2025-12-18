@@ -62,8 +62,8 @@ if __name__ == '__main__':
         access_token=generate_token(api_key="TBDDAGJzAXaX5Zzl", api_secret="LEucuSDPRYCUaLj0UX1vvhoA"),
         # model_name="Aejvnm7q3qmko",  # r1
         model_name = "Awd7m0gtxfphu", # v3
-        temperature=0.3,  # 确定性输出
-        max_tokens=8000  # 减少token消耗
+        temperature=0.1,  # 确定性输出
+        max_tokens=1000  # 减少token消耗
     )
     # print(llm.invoke("你是谁？"))
     agent_client = SequenceMatchAgent(text_key="input_text", model=llm)
