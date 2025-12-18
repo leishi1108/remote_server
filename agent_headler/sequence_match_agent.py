@@ -68,5 +68,5 @@ if __name__ == '__main__':
     # print(llm.invoke("你是谁？"))
     agent_client = SequenceMatchAgent(text_key="input_text", model=llm)
 
-    res = agent_client.run({"input_text": "1、1.5mm厚聚合物水泥防水涂料(由建筑面层上翻做防水涂膜300mm)\n"})
+    res = agent_client.run({"input_text": "楼面5-防滑地砖-其他层\n"})
     print(f"res {res} type {type(res)}")
